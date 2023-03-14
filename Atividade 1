@@ -1,0 +1,51 @@
+create database Seguradora
+
+use Seguradora
+
+create table Cliente(
+	CodCliente int primary key,
+	Nome varchar(45) not null,
+	CPF varchar(45) not null unique,
+	Sexo varchar(20),
+	Estado varchar(45),
+	Cidade varchar(45),
+	Bairro varchar(45),
+	Numero varchar(45),
+	Rua varchar(45),
+	TelefoneFixo varchar(45),
+	TelefoneCelular varchar(45) not null unique,
+)
+
+create table Carro(
+	CodCarro int primary key not null,
+	Placa varchar(45) not null,
+	Marca varchar(45) not null,
+	Modelo varchar(45) not null,
+	Ano varchar(45) not null,
+	Chassi varchar(45) not null,
+	Cor varchar(45) not null,
+)
+
+create table Sinistro(
+	CodApolice int,
+	Carro_CodCarro int,
+	HoraSinistro int,
+	DataSinistro date,
+	LocalSinistro varchar(45),
+	Condutor varchar(45),
+	constraint pk_sinistro PRIMARY KEY(CodApolice, Carro_CodCarro),
+	constraint fk_carro_CodCarro FOREIGN KEY (Carro_CodCarro) REFERENCES carro(CodCarro),
+)
+
+create table Apolice(
+	CodApolice int primary key not null,
+	ValorCobertura decimal not null,
+	ValorFranquia decimal not null,
+	DataInicioVigencia date not null,
+	DataFimVigencia date not null,
+	Cliente_CodCliente int not null,
+	Carro_CodCarro int not null,
+	constraint fk_Cliente_CodCliente FOREIGN KEY (Cliente_CodCliente) REFERENCES Cliente(CodCliente),
+	constraint fk_CodCarro FOREIGN KEY (Carro_CodCarro) REFERENCES Carro(CodCarro),
+	constraint ck_DataInicioVigencia CHECK(DataInicioVigencia > getdate()),
+)
